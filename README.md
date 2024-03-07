@@ -1,6 +1,6 @@
 # My Config Backup
 
-This repository contains scripts and an Ansible playbook for backing up dot files and configurations to a GitHub repository.
+This repository contains scripts and an Ansible playbook for backing up dot files and configurations to a private GitHub repository.
 
 ## Usage
 
