@@ -4,26 +4,14 @@ This repository contains scripts and an Ansible playbook for backing up dot file
 
 ## Usage
 
-### 1. GitHub Token
-
-You'll be asked to generate a GitHub token, if you want to do it in advance follow these steps:
-
-1. Click the following link to generate a GitHub token: [Generate GitHub Token](https://github.com/settings/tokens/new)
-2. Copy the generated token.
-3. Paste the token when prompted.
-
-### 2. Bootstrap Script
-
-Run the bootstrap script to set up the necessary tools:
-
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/diegomrepo/backuper/main/bootstrap.sh)"
 ```
-### 3. Ansible Playbook
-Alternatively, use the Ansible playbook for a more automated backup process:
+### Utility
+Alternatively, after 1st time use, the Ansible playbook (inside a wrapper called `backuper`) will be installed inside `~/bin`
 
 ```bash
-ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook backup.yml
+~/bin/backuper
 ```
 ## Directory Structure
 - `bootstrap.sh` Script to set up the necessary tools.
