@@ -17,7 +17,7 @@ Before running the scripts, obtain a GitHub token by following these steps:
 Run the bootstrap script to set up the necessary tools:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/diegomrepo/my-config/main/bootstrap.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/diegomrepo/backuper/main/bootstrap.sh)"
 ```
 ### 3. Ansible Playbook
 Alternatively, use the Ansible playbook for a more automated backup process:
