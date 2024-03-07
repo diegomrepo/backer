@@ -100,7 +100,7 @@ fi
 
 # Clone or pull the GitHub repository containing the Ansible playbook
 if [ -d "$HOME/tmp/my-config" ]; then
-  # Directory exists, perform a Git pull
+  echo Directory exists, perform a Git pull
   if cd my-config && git pull origin main; then
     echo "GitHub repository pulled successfully"
   else
@@ -108,7 +108,7 @@ if [ -d "$HOME/tmp/my-config" ]; then
     exit 1
   fi
 else
-  # Directory does not exist, perform a Git clone
+  echo Directory does not exist, perform a Git clone
   if mkdir -p $HOME/tmp && cd $HOME/tmp && git clone https://$github_token@github.com/diegomrepo/my-config.git && cd my-config; then
     echo "GitHub repository cloned successfully"
   else
