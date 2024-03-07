@@ -19,7 +19,7 @@ backuper_data_dir="$xdg_data_home/backuper"
 mkdir -p "$backuper_data_dir"
 
 # Define the destination path for backup.yml
-backup_yml_destination="$backuper_data_dir/backup.yml"
+playbookfile="$backuper_data_dir/backup.yml"
 
 # Define the destination path for backuper executable
 backuper_exe="$BINDIR/backuper"
@@ -76,8 +76,8 @@ fi
 
 # Download backup.yml from the specified URL
 backup_url="https://raw.githubusercontent.com/diegomrepo/backuper/main/backup.yml"
-curl -fsSL -o "$backup_yml_destination" "$backup_url"
-echo "backup.yml downloaded successfully to $backup_yml_destination"
+curl -fsSL -o "$playbookfile" "$backup_url"
+echo "backup.yml downloaded successfully to $playbookfile"
 
 # Create the backuper executable file in ~/bin
 echo 'ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$backuper_data_dir/backup.yml" "$@"' > "$backuper_exe"
@@ -88,4 +88,4 @@ echo "backuper executable created at $backuper_exe"
 #ansible-galaxy install -r requirements.yml
 
 # Run the Ansible playbook to backup dot files and configs and upload them to GitHub
-ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook backup.yml
+ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook $playbookfile
