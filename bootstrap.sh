@@ -88,4 +88,4 @@ echo "backuper executable created at $backuper_exe"
 #ansible-galaxy install -r requirements.yml
 
 # Run the Ansible playbook to backup dot files and configs and upload them to GitHub
-ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook $playbookfile
+ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile"
