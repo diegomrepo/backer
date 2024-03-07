@@ -127,7 +127,7 @@ else
 fi
 
 # Create the backuper executable file in ~/bin
-echo 'ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$backuper_data_dir/backup.yml" "$@"' > "$backuper_exe"
+echo "ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook ${playbookfile} ${@}" > "$backuper_exe"
 if chmod +x "$backuper_exe"; then
   echo "Backuper executable created at $backuper_exe"
 else
