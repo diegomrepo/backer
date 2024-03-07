@@ -97,11 +97,11 @@ else
   echo "Failed to install Ansible"
   exit 1
 fi
-
+repo_tmp="$HOME/tmp/my-config"
 # Clone or pull the GitHub repository containing the Ansible playbook
-if [ -d "$HOME/tmp/my-config" ]; then
+if [ -d "$repo_tmp" ]; then
   echo Directory exists, perform a Git pull
-  if cd my-config && git pull origin main; then
+  if cd "$repo_tmp" && git pull origin main; then
     echo "GitHub repository pulled successfully"
   else
     echo "Failed to pull GitHub repository"
@@ -109,7 +109,7 @@ if [ -d "$HOME/tmp/my-config" ]; then
   fi
 else
   echo Directory does not exist, perform a Git clone
-  if mkdir -p $HOME/tmp && cd $HOME/tmp && git clone https://$github_token@github.com/diegomrepo/my-config.git && cd my-config; then
+  if mkdir -p $HOME/tmp && cd $HOME/tmp && git clone https://$github_token@github.com/diegomrepo/my-config.git && cd "$repo_tmp"; then
     echo "GitHub repository cloned successfully"
   else
     echo "Failed to clone GitHub repository"
