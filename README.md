@@ -6,7 +6,7 @@ This repository contains scripts and an Ansible playbook for backing up dot file
 
 ### 1. GitHub Token
 
-Before running the scripts, obtain a GitHub token by following these steps:
+You'll be asked to generate a GitHub token, if you want to do it in advance follow these steps:
 
 1. Click the following link to generate a GitHub token: [Generate GitHub Token](https://github.com/settings/tokens/new)
 2. Copy the generated token.
