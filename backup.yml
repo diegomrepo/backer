@@ -1,0 +1,55 @@
+---
+- name: Backup dot files and configs to GitHub
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Read GitHub Token from .github_token file
+      slurp:
+        src: ~/.github_token
+      register: github_token_file
+
+    - name: Set GitHub Token
+      set_fact:
+        github_token: "{{ github_token_file.content | b64decode | regex_replace('\\s+$', '') }}"
+
+    - name: Clone the GitHub repository
+      git:
+        repo: "https://{{ github_token }}@github.com/diegomrepo/my-config.git"
+        dest: /tmp/backups
+        clone: yes
+        update: yes
+        force: yes
+      become: true
+
+    - name: Backup dot files and configs
+      find:
+        hidden: true
+        paths:
+          - "{{ ansible_env.HOME }}"
+        patterns:
+          - '.*'
+          - '*.conf'
+          - '*.cfg'
+          - '*.ini'
+        file_type: file
+      register: backup_files
+
+    - name: Copy backup files to local directory
+      copy:
+        src: "{{ item.path }}"
+        dest: /tmp/backups/{{ item.path | basename }}
+      with_items: "{{ backup_files.files }}"
+      become: true
+
+    - name: Commit and push backup files to GitHub
+      become: true
+      ansible.builtin.shell:
+        cmd: git add . && git commit -m "Backup {{ ansible_date_time.iso8601 }}" && git push
+      environment:
+        EMAIL: diegomrepo@gmail.com
+        GIT_AUTHOR_NAME: "Diego M"
+        GIT_DIR: /tmp/backups/.git
+        GIT_WORK_TREE: /tmp/backups
+      register: mygit
+      failed_when: mygit.rc != 0 and "nothing to commit, working tree clean" not in mygit.stdout
+
