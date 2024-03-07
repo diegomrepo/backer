@@ -56,6 +56,11 @@ else
   cd my-config
 fi
 
+# Download backup.yml from the specified URL
+backup_url="https://raw.githubusercontent.com/diegomrepo/backuper/main/backup.yml"
+curl -fsSL -o backup.yml "$backup_url"
+echo "backup.yml downloaded successfully from $backup_url"
+
 # Install required Ansible roles
 #ansible-galaxy install -r requirements.yml
 
