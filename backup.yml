@@ -41,15 +41,22 @@
       with_items: "{{ backup_files.files }}"
       become: true
 
-    - name: Commit and push backup files to GitHub
-      become: true
-      ansible.builtin.shell:
-        cmd: git add . && git commit -m "Backup {{ ansible_date_time.iso8601 }}" && git push
-      environment:
-        EMAIL: diegomrepo@gmail.com
-        GIT_AUTHOR_NAME: "Diego M"
-        GIT_DIR: /tmp/backups/.git
-        GIT_WORK_TREE: /tmp/backups
-      register: mygit
-      failed_when: mygit.rc != 0 and "nothing to commit, working tree clean" not in mygit.stdout
+    - name: Check for changes
+      command: git status --porcelain
+      args:
+        chdir: /tmp/backups
+      register: git_status
 
+    - name: Commit and push backup files to GitHub if changes
+      when: git_status.stdout_lines
+      become: true
+      git:
+        repo: "https://{{ github_token }}@github.com/diegomrepo/my-config.git"
+        dest: /tmp/backups
+        update: yes
+        force: yes
+        remote: origin
+        pull: yes
+        push: yes
+        commit_msg: "Backup {{ ansible_date_time.iso8601 }}"
+      register: git_result
