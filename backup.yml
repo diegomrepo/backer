@@ -2,7 +2,27 @@
 - name: Backup dot files and configs to GitHub
   hosts: localhost
   gather_facts: true
+  vars:
+    cur_user: "{{ lookup('ansible.builtin.env', 'USER', default=undef()) }}" # Use lookup to get the current username
+    git_name: "{{ ansible_play_hosts[0] }}"
+    git_email: "{{ ansible_play_hosts[1] }}"
+    backup_repo: "{{ ansible_play_hosts[2] }}"
+    required_args:
+      - git_name
+      - git_email
+      - backup_repo
+
   tasks:
+    - name: Check if required args are set
+      fail:
+        msg: "{{ item }} is not set. Please provide a value for {{ item }}"
+      when: "{{ item }} is not defined"
+      with_items: "{{ required_args }}"
+
+    - name: Debug USER environment variable
+      debug:
+        msg: "USER: {{ lookup('ansible.builtin.env', 'USER', default=undef()) }}"
+
     - name: Read GitHub Token from .github_token file
       slurp:
         src: ~/.github_token
@@ -12,14 +32,21 @@
       set_fact:
         github_token: "{{ github_token_file.content | b64decode | regex_replace('\\s+$', '') }}"
 
+    - name: Ensure /tmp/backups directory exists
+      file:
+        path: /tmp/backups
+        state: directory
+
+    - name: Add exception for /tmp/backups directory in Git config
+      command: git config --global --add safe.directory /tmp/backups
+
     - name: Clone the GitHub repository
       git:
-        repo: "https://{{ github_token }}@github.com/diegomrepo/my-config.git"
+        repo: "https://{{ github_token }}@github.com/{{ backup_repo }}.git"
         dest: /tmp/backups
         clone: yes
         update: yes
         force: yes
-      become: true
 
     - name: Backup dot files and configs
       find:
@@ -39,7 +66,9 @@
         src: "{{ item.path }}"
         dest: /tmp/backups/{{ item.path | basename }}
       with_items: "{{ backup_files.files }}"
-      become: true
+
+    - name: Sync dot files and configs
+      command: rsync -av --delete --exclude=.git/ --existing --include='.*' --include='*.conf' --include='*.cfg' --include='*.ini' --exclude='*' "{{ ansible_env.HOME }}/" /tmp/backups/
 
     - name: Check for changes
       command: git status --porcelain
@@ -47,16 +76,20 @@
         chdir: /tmp/backups
       register: git_status
 
+    - name: Set Git user name and email for the repository
+      command: git config user.name "{{ git_name }}"
+      args:
+        chdir: /tmp/backups
+
+    - name: Set Git user email for the repository
+      command: git config user.email "{{ git_email }}"
+      args:
+        chdir: /tmp/backups
+
     - name: Commit and push backup files to GitHub if changes
-      when: git_status.stdout_lines
-      become: true
-      git:
-        repo: "https://{{ github_token }}@github.com/diegomrepo/my-config.git"
-        dest: /tmp/backups
-        update: yes
-        force: yes
-        remote: origin
-        pull: yes
-        push: yes
-        commit_msg: "Backup {{ ansible_date_time.iso8601 }}"
-      register: git_result
+      shell: |
+        cd /tmp/backups
+        git add .
+        [ "$(git status --porcelain | wc -l)" -eq 0 ] || (git commit -m "Backup $(date --iso-8601=seconds)" && git push)
+      register: mygit
+      failed_when: mygit.rc != 0
