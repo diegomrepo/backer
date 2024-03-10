@@ -1,5 +1,30 @@
 #!/bin/bash
 set -e #set -o errexit
+set -x #show each command for debugging
+
+# Function to open a URL in the default web browser
+open_url() {
+  xdg-open "$1" &>/dev/null
+}
+
+# Function to prompt the user for input
+prompt_user() {
+  read -p "$1: " input
+  echo "$input"
+}
+
+# Function to verify if a Git repository exists
+verify_git_repo() {
+  repo_url="$1"
+  github_repo_url="https://github.com/$repo_url"
+  if git ls-remote "$github_repo_url" &> /dev/null; then
+
+    echo "Repository $github_repo_url exists."
+  else
+    echo "Error: Repository $github_repo_url does not exist or cannot be accessed."
+    return 1
+  fi
+}
 
 # Gain sudo access
 if sudo echo "Gained sudo access"; then
@@ -9,11 +34,25 @@ else
   exit 1
 fi
 
-# Function to open a URL in the default web browser
-open_url() {
-  xdg-open "$1" &>/dev/null
-}
+# Check if arguments are provided, otherwise prompt the user
+if [ $# -eq 3 ]; then
+  git_name="$1"
+  git_email="$2"
+  backup_repo="$3"
+else
+  # Prompt the user for Git user name
+  git_name=$(prompt_user "Enter your Github commit name (e.g. John Doe)")
 
+  # Prompt the user for Git email
+  git_email=$(prompt_user "Enter your Github email")
+
+  # Prompt the user for the backup repository
+  backup_repo=$(prompt_user "Enter the backup repository (in the format 'username/repo')")
+fi
+
+sleep 1
+verify_git_repo "$backup_repo"
+sleep 1
 # Set the backuper directory
 BINDIR="$HOME/bin"
 if mkdir -p "$BINDIR"; then
@@ -127,19 +166,27 @@ else
 fi
 
 # Create the backuper executable file in ~/bin
-echo "ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook ${playbookfile} ${@}" > "$backuper_exe"
-if chmod +x "$backuper_exe"; then
-  echo "Backuper executable created at $backuper_exe"
-else
-  echo "Failed to create backuper executable"
-  exit 1
-fi
+# echo "ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook ${playbookfile} ${@}" > "$backuper_exe"
+# if chmod +x "$backuper_exe"; then
+#   echo "Backuper executable created at $backuper_exe"
+# else
+#   echo "Failed to create backuper executable"
+#   exit 1
+# fi
 
 # Install required Ansible roles
 #ansible-galaxy install -r requirements.yml
 
 # Run the Ansible playbook to backup dot files and configs and upload them to GitHub
-if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile"; then
+# if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile"; then
+#   echo "Ansible playbook executed successfully"
+# else
+#   echo "Failed to execute Ansible playbook"
+#   exit 1
+# fi
+
+# Run the Ansible playbook to backup dot files and configs and upload them to GitHub
+if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile" --extra-vars "git_name='$git_name' git_email='$git_email' backup_repo='$backup_repo'"; then
   echo "Ansible playbook executed successfully"
 else
   echo "Failed to execute Ansible playbook"
