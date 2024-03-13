@@ -4,7 +4,7 @@ set -x #show each command for debugging
 
 # Function to open a URL in the default web browser
 open_url() {
-  xdg-open "$1" &>/dev/null
+  xdg-open "$1" &>/dev/null || true
 }
 
 # Function to prompt the user for input
