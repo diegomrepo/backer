@@ -52,14 +52,16 @@ install_ansible() {
 
 # Function to verify if a Git repository exists
 verify_git_repo() {
-  repo_url="$1"
-  github_repo_url="https://github.com/$repo_url"
-  if git ls-remote "$github_repo_url" &> /dev/null; then
+  local repo_url="$1"
+  local github_repo_url="https://github.com/$repo_url"
+  local github_token=$(cat $HOME/.github_token)
 
-    echo "Repository $github_repo_url exists."
+  # Use the GitHub token in the URL for authentication
+  if git ls-remote "https://$github_token@github.com/$repo_url" &>/dev/null; then
+    echo "GitHub repository exists"
   else
-    echo "Error: Repository $github_repo_url does not exist or cannot be accessed."
-    return 1
+    echo "GitHub repository does not exist or token is not valid"
+    exit 1
   fi
 }
 
