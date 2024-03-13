@@ -4,7 +4,11 @@ set -x #show each command for debugging
 
 # Function to open a URL in the default web browser
 open_url() {
-  xdg-open "$1" &>/dev/null || true
+  if [ -n "$DISPLAY" ]; then
+    xdg-open "$1" &>/dev/null
+  else
+    echo "Not in a graphical session. Skipping browser opening."
+  fi
 }
 
 # Function to prompt the user for input
