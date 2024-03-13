@@ -13,6 +13,39 @@ prompt_user() {
   echo "$input"
 }
 
+# Function to check if the Linux distribution is Debian
+is_debian() {
+  [ -e /etc/os-release ] && source /etc/os-release && [ "$ID" == "debian" ]
+}
+
+# Function to install Ansible based on the Linux distribution
+install_ansible() {
+  if is_debian; then
+    # Install Ansible using apt on Debian
+    if sudo apt install -y ansible; then
+      echo "Ansible installed successfully"
+    else
+      echo "Failed to install Ansible"
+      exit 1
+    fi
+  else
+    # Install pip
+    if sudo apt install -y python3-pip; then
+      echo "Pip installed successfully"
+    else
+      echo "Failed to install Pip"
+      exit 1
+    fi
+    # Install Ansible using pip for other distributions
+    if sudo pip3 install ansible; then
+      echo "Ansible installed successfully"
+    else
+      echo "Failed to install Ansible"
+      exit 1
+    fi
+  fi
+}
+
 # Function to verify if a Git repository exists
 verify_git_repo() {
   repo_url="$1"
@@ -121,21 +154,10 @@ else
   exit 1
 fi
 
-# Install pip
-if sudo apt install -y python3-pip; then
-  echo "Pip installed successfully"
-else
-  echo "Failed to install Pip"
-  exit 1
-fi
 
-# Install Ansible via pip
-if sudo pip3 install ansible; then
-  echo "Ansible installed successfully"
-else
-  echo "Failed to install Ansible"
-  exit 1
-fi
+# Install Ansible based on the Linux distribution
+install_ansible
+
 repo_tmp="$HOME/tmp/my-config"
 # Clone or pull the GitHub repository containing the Ansible playbook
 if [ -d "$repo_tmp" ]; then
@@ -158,7 +180,7 @@ fi
 
 # Download backup.yml from the specified URL
 backup_url="https://raw.githubusercontent.com/diegomrepo/backuper/main/backup.yml"
-if curl -fsSL -o "$playbookfile" "$backup_url"; then
+if curl --connect-timeout 15 -fsSL -o "$playbookfile" "$backup_url"; then
   echo "backup.yml downloaded successfully to $playbookfile"
 else
   echo "Failed to download backup.yml"
