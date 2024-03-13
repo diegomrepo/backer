@@ -98,9 +98,9 @@ else
   backup_repo=$(prompt_user "Enter the backup repository (in the format 'username/repo')")
 fi
 
-sleep 1
-verify_git_repo "$backup_repo"
-sleep 1
+# Define the destination path for backup.yml
+playbookfile="$backuper_data_dir/backup.yml"
+
 # Set the backuper directory
 BINDIR="$HOME/bin"
 if mkdir -p "$BINDIR"; then
@@ -109,19 +109,6 @@ else
   echo "Failed to create backuper directory"
   exit 1
 fi
-
-# Set the XDG_DATA_HOME directory and create the backuper folder
-xdg_data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
-backuper_data_dir="$xdg_data_home/backuper"
-if mkdir -p "$backuper_data_dir"; then
-  echo "Backuper data directory created at $backuper_data_dir"
-else
-  echo "Failed to create backuper data directory"
-  exit 1
-fi
-
-# Define the destination path for backup.yml
-playbookfile="$backuper_data_dir/backup.yml"
 
 # Define the destination path for backuper executable
 backuper_exe="$BINDIR/backuper"
@@ -152,6 +139,23 @@ else
     exit 1
   fi
 fi
+
+sleep 1
+verify_git_repo "$backup_repo"
+sleep 1
+
+
+
+# Set the XDG_DATA_HOME directory and create the backuper folder
+xdg_data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
+backuper_data_dir="$xdg_data_home/backuper"
+if mkdir -p "$backuper_data_dir"; then
+  echo "Backuper data directory created at $backuper_data_dir"
+else
+  echo "Failed to create backuper data directory"
+  exit 1
+fi
+
 
 
 # Install Ansible based on the Linux distribution
