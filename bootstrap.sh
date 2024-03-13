@@ -66,6 +66,21 @@ else
   echo "Failed to gain sudo access"
   exit 1
 fi
+# Update system package manager
+if sudo apt update; then
+  echo "System package manager updated successfully"
+else
+  echo "Failed to update system package manager"
+  exit 1
+fi
+
+# Install Git
+if sudo apt install -y git; then
+  echo "Git installed successfully"
+else
+  echo "Failed to install Git"
+  exit 1
+fi
 
 # Check if arguments are provided, otherwise prompt the user
 if [ $# -eq 3 ]; then
@@ -136,22 +151,6 @@ else
     echo "Failed to save GitHub token to $token_file"
     exit 1
   fi
-fi
-
-# Update system package manager
-if sudo apt update; then
-  echo "System package manager updated successfully"
-else
-  echo "Failed to update system package manager"
-  exit 1
-fi
-
-# Install Git
-if sudo apt install -y git; then
-  echo "Git installed successfully"
-else
-  echo "Failed to install Git"
-  exit 1
 fi
 
 
