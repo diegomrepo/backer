@@ -21,7 +21,7 @@
 
     - name: Debug USER environment variable
       debug:
-        msg: "USER: {{ lookup('ansible.builtin.env', 'USER', default=undef()) }}"
+        var: cur_user
 
     - name: Read GitHub Token from .github_token file
       slurp:
