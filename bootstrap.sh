@@ -4,7 +4,11 @@ set -x #show each command for debugging
 
 # Function to open a URL in the default web browser
 open_url() {
-  xdg-open "$1" &>/dev/null
+  if [ -n "$DISPLAY" ]; then
+    xdg-open "$1" &>/dev/null
+  else
+    echo "Not in a graphical session. Skipping browser opening."
+  fi
 }
 
 # Function to prompt the user for input
@@ -48,14 +52,16 @@ install_ansible() {
 
 # Function to verify if a Git repository exists
 verify_git_repo() {
-  repo_url="$1"
-  github_repo_url="https://github.com/$repo_url"
-  if git ls-remote "$github_repo_url" &> /dev/null; then
+  local repo_url="$1"
+  local github_repo_url="https://github.com/$repo_url"
+  local github_token=$(cat $HOME/.github_token)
 
-    echo "Repository $github_repo_url exists."
+  # Use the GitHub token in the URL for authentication
+  if git ls-remote "https://$github_token@github.com/$repo_url" &>/dev/null; then
+    echo "GitHub repository exists"
   else
-    echo "Error: Repository $github_repo_url does not exist or cannot be accessed."
-    return 1
+    echo "GitHub repository does not exist or token is not valid"
+    exit 1
   fi
 }
 
@@ -64,6 +70,21 @@ if sudo echo "Gained sudo access"; then
   echo "Sudo access granted"
 else
   echo "Failed to gain sudo access"
+  exit 1
+fi
+# Update system package manager
+if sudo apt update; then
+  echo "System package manager updated successfully"
+else
+  echo "Failed to update system package manager"
+  exit 1
+fi
+
+# Install Git
+if sudo apt install -y git; then
+  echo "Git installed successfully"
+else
+  echo "Failed to install Git"
   exit 1
 fi
 
@@ -83,9 +104,9 @@ else
   backup_repo=$(prompt_user "Enter the backup repository (in the format 'username/repo')")
 fi
 
-sleep 1
-verify_git_repo "$backup_repo"
-sleep 1
+# Define the destination path for backup.yml
+playbookfile="$backuper_data_dir/backup.yml"
+
 # Set the backuper directory
 BINDIR="$HOME/bin"
 if mkdir -p "$BINDIR"; then
@@ -94,19 +115,6 @@ else
   echo "Failed to create backuper directory"
   exit 1
 fi
-
-# Set the XDG_DATA_HOME directory and create the backuper folder
-xdg_data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
-backuper_data_dir="$xdg_data_home/backuper"
-if mkdir -p "$backuper_data_dir"; then
-  echo "Backuper data directory created at $backuper_data_dir"
-else
-  echo "Failed to create backuper data directory"
-  exit 1
-fi
-
-# Define the destination path for backup.yml
-playbookfile="$backuper_data_dir/backup.yml"
 
 # Define the destination path for backuper executable
 backuper_exe="$BINDIR/backuper"
@@ -138,21 +146,22 @@ else
   fi
 fi
 
-# Update system package manager
-if sudo apt update; then
-  echo "System package manager updated successfully"
+sleep 1
+verify_git_repo "$backup_repo"
+sleep 1
+
+
+
+# Set the XDG_DATA_HOME directory and create the backuper folder
+xdg_data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
+backuper_data_dir="$xdg_data_home/backuper"
+if mkdir -p "$backuper_data_dir"; then
+  echo "Backuper data directory created at $backuper_data_dir"
 else
-  echo "Failed to update system package manager"
+  echo "Failed to create backuper data directory"
   exit 1
 fi
 
-# Install Git
-if sudo apt install -y git; then
-  echo "Git installed successfully"
-else
-  echo "Failed to install Git"
-  exit 1
-fi
 
 
 # Install Ansible based on the Linux distribution
