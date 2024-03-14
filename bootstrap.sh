@@ -237,7 +237,7 @@ fi
 # fi
 
 # Run the Ansible playbook to backup dot files and configs and upload them to GitHub
-if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile" --extra-vars "git_name='$git_name' git_email='$git_email' backup_repo='$backup_repo'"; then
+if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile" --extra-vars "cur_home='$HOME' git_name='$git_name' git_email='$git_email' backup_repo='$backup_repo'"; then
   echo "Ansible playbook executed successfully"
 else
   echo "Failed to execute Ansible playbook"
