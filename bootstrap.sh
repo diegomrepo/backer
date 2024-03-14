@@ -167,7 +167,8 @@ fi
 # Install Ansible based on the Linux distribution
 install_ansible
 
-repo_tmp="$HOME/tmp/$backup_repo"
+#repo_tmp="$HOME/tmp/$backup_repo"
+repo_tmp="$HOME/tmp/${backup_repo##*/}"
 # Clone or pull the GitHub repository containing the Ansible playbook
 if [ -d "$repo_tmp" ]; then
   echo Directory exists, perform a Git pull
