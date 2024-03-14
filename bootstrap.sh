@@ -218,25 +218,7 @@ else
   exit 1
 fi
 
-# Create the backuper executable file in ~/bin
-# echo "ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook ${playbookfile} ${@}" > "$backuper_exe"
-# if chmod +x "$backuper_exe"; then
-#   echo "Backuper executable created at $backuper_exe"
-# else
-#   echo "Failed to create backuper executable"
-#   exit 1
-# fi
 
-# Install required Ansible roles
-#ansible-galaxy install -r requirements.yml
-
-# Run the Ansible playbook to backup dot files and configs and upload them to GitHub
-# if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile"; then
-#   echo "Ansible playbook executed successfully"
-# else
-#   echo "Failed to execute Ansible playbook"
-#   exit 1
-# fi
 
 # Run the Ansible playbook to backup dot files and configs and upload them to GitHub
 if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile" --extra-vars "cur_home='$HOME' git_name='$git_name' git_email='$git_email' backup_repo='$backup_repo'"; then
@@ -245,3 +227,13 @@ else
   echo "Failed to execute Ansible playbook"
   exit 1
 fi
+# Create the backuper executable file in ~/bin
+echo "ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook ${playbookfile} --extra-vars 'cur_home=\"$HOME\" git_name=\"$git_name\" git_email=\"$git_email\" backup_repo=\"$backup_repo\"'" > "$backuper_exe"
+if chmod +x "$backuper_exe"; then
+  echo "Backuper executable created at $backuper_exe"
+else
+  echo "Failed to create backuper executable"
+  exit 1
+fi
+
+echo Next time to backup, just execute ~/bin/backuper
