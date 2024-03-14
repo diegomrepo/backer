@@ -104,9 +104,6 @@ else
   backup_repo=$(prompt_user "Enter the backup repository (in the format 'username/repo')")
 fi
 
-# Define the destination path for backup.yml
-playbookfile="$backuper_data_dir/backup.yml"
-
 # Set the backuper directory
 BINDIR="$HOME/bin"
 if mkdir -p "$BINDIR"; then
@@ -162,7 +159,8 @@ else
   exit 1
 fi
 
-
+# Define the destination path for backup.yml
+playbookfile="$backuper_data_dir/backup.yml"
 
 # Install Ansible based on the Linux distribution
 install_ansible
