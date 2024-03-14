@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e #set -o errexit
-#set -x #show each command for debugging
+set -x #show each command for debugging
 
 # Function to open a URL in the default web browser
 open_url() {
@@ -211,7 +211,7 @@ fi
 
 # Download backup.yml from the specified URL
 backup_url="https://raw.githubusercontent.com/diegomrepo/backuper/main/backup.yml"
-if curl --connect-timeout 15 -fsSL -o "$playbookfile" "$backup_url"; then
+if curl -v --connect-timeout 15 -fsSL -o "$playbookfile" "$backup_url"; then
   echo "backup.yml downloaded successfully to $playbookfile"
 else
   echo "Failed to download backup.yml"
