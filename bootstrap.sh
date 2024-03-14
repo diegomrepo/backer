@@ -81,8 +81,8 @@ else
 fi
 
 # Install Git
-if sudo apt install -y git; then
-  echo "Git installed successfully"
+if sudo apt install -y git rsync; then
+  echo "git/rsync installed successfully"
 else
   echo "Failed to install Git"
   exit 1
