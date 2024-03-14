@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e #set -o errexit
-set -x #show each command for debugging
+#set -x #show each command for debugging
 
 # Function to open a URL in the default web browser
 open_url() {
