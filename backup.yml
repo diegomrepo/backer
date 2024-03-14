@@ -27,7 +27,7 @@
 
     - name: Read GitHub Token from .github_token file
       slurp:
-        src: {{ cur_home }}/.github_token
+        src: "{{ cur_home }}/.github_token"
       register: github_token_file
 
     - name: Set GitHub Token
