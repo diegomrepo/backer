@@ -199,7 +199,7 @@ if [ -d "$repo_tmp/.git" ] && [ "$(ls -A $repo_tmp)" ]; then
 else
   # If the repository directory doesn't exist or is empty, perform a fresh clone
   echo "Directory does not exist or is empty, perform a Git clone"
-  if mkdir -p "$HOME/tmp" && cd "$HOME/tmp" && git clone "https://github.com/$backup_repo"; then
+  if mkdir -p "$HOME/tmp" && cd "$HOME/tmp" && git clone "https://${github_token}@github.com/$backup_repo"; then
     echo "GitHub repository cloned successfully"
   else
     echo "Failed to clone GitHub repository"
