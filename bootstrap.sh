@@ -161,9 +161,10 @@ fi
 
 # Define the destination path for backup.yml
 playbookfile="$backuper_data_dir/backup.yml"
-
+echo $playbookfile
 # Install Ansible based on the Linux distribution
 install_ansible
+echo $playbookfile
 
 #repo_tmp="$HOME/tmp/$backup_repo"
 repo_tmp="$HOME/tmp/${backup_repo##*/}"
@@ -206,6 +207,7 @@ else
     exit 1
   fi
 fi
+echo $playbookfile
 
 # Download backup.yml from the specified URL
 backup_url="https://raw.githubusercontent.com/diegomrepo/backuper/main/backup.yml"
@@ -217,6 +219,7 @@ else
 fi
 
 
+echo $playbookfile
 
 # Run the Ansible playbook to backup dot files and configs and upload them to GitHub
 if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile" --extra-vars "cur_home='$HOME' git_name='$git_name' git_email='$git_email' backup_repo='$backup_repo'"; then
