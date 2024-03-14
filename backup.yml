@@ -3,10 +3,11 @@
   hosts: localhost
   gather_facts: true
   vars:
-    cur_user: "{{ ansible_play_hosts[0] }}"
+    cur_home: "{{ ansible_play_hosts[0] }}"
     git_name: "{{ ansible_play_hosts[1] }}"
     git_email: "{{ ansible_play_hosts[2] }}"
     backup_repo: "{{ ansible_play_hosts[3] }}"
+    test: "{{ ansible_env.HOME }}"
     required_args:
       - git_name
       - git_email
@@ -19,13 +20,14 @@
       when: "{{ item }} is not defined"
       with_items: "{{ required_args }}"
 
-    - name: Debug USER environment variable
+    - name: Debug HOME environment variable
       debug:
-        var: cur_user
+        var: cur_home
+        test: test
 
     - name: Read GitHub Token from .github_token file
       slurp:
-        src: /home/{{ cur_user }}/.github_token
+        src: {{ cur_home }}/.github_token
       register: github_token_file
 
     - name: Set GitHub Token
