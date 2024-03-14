@@ -169,18 +169,39 @@ install_ansible
 
 #repo_tmp="$HOME/tmp/$backup_repo"
 repo_tmp="$HOME/tmp/${backup_repo##*/}"
-# Clone or pull the GitHub repository containing the Ansible playbook
-if [ -d "$repo_tmp" ]; then
-  echo Directory exists, perform a Git pull
-  if cd "$repo_tmp" && git pull origin main; then
-    echo "GitHub repository pulled successfully"
+bash
+Copy code
+# Check if the repository exists and is not empty
+if [ -d "$repo_tmp/.git" ] && [ "$(ls -A $repo_tmp)" ]; then
+  # Navigate into the repository directory
+  if cd "$repo_tmp"; then
+    # Check if the 'main' branch exists
+    if git rev-parse --verify main >/dev/null 2>&1; then
+      # Pull the 'main' branch
+      if git pull origin main; then
+        echo "GitHub repository pulled successfully"
+      else
+        echo "Failed to pull GitHub repository"
+        exit 1
+      fi
+    else
+      # If 'main' branch doesn't exist, do something else (e.g., create the branch)
+      echo "Main branch doesn't exist, performing initialization"
+      if git checkout -b main && git push -u origin main; then
+        echo "Main branch initialized and pushed successfully"
+      else
+        echo "Failed to initialize main branch and push"
+        exit 1
+      fi
+    fi
   else
-    echo "Failed to pull GitHub repository"
+    echo "Failed to navigate into the repository directory"
     exit 1
   fi
 else
-  echo Directory does not exist, perform a Git clone
-  if mkdir -p $HOME/tmp && cd $HOME/tmp && git clone https://$github_token@github.com/$backup_repo.git && cd "$repo_tmp"; then
+  # If the repository directory doesn't exist or is empty, perform a fresh clone
+  echo "Directory does not exist or is empty, perform a Git clone"
+  if mkdir -p "$HOME/tmp" && cd "$HOME/tmp" && git clone "https://github.com/$backup_repo"; then
     echo "GitHub repository cloned successfully"
   else
     echo "Failed to clone GitHub repository"
