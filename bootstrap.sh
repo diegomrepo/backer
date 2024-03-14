@@ -167,7 +167,7 @@ fi
 # Install Ansible based on the Linux distribution
 install_ansible
 
-repo_tmp="$HOME/tmp/my-config"
+repo_tmp="$HOME/tmp/$backup_repo"
 # Clone or pull the GitHub repository containing the Ansible playbook
 if [ -d "$repo_tmp" ]; then
   echo Directory exists, perform a Git pull
@@ -179,7 +179,7 @@ if [ -d "$repo_tmp" ]; then
   fi
 else
   echo Directory does not exist, perform a Git clone
-  if mkdir -p $HOME/tmp && cd $HOME/tmp && git clone https://$github_token@github.com/diegomrepo/my-config.git && cd "$repo_tmp"; then
+  if mkdir -p $HOME/tmp && cd $HOME/tmp && git clone https://$github_token@github.com/$backup_repo.git && cd "$repo_tmp"; then
     echo "GitHub repository cloned successfully"
   else
     echo "Failed to clone GitHub repository"
