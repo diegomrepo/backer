@@ -22,8 +22,9 @@
 
     - name: Debug HOME environment variable
       debug:
-        var: cur_home
-        test: test
+        var:
+          - cur_home
+          - test
 
     - name: Read GitHub Token from ~/.github_token file
       slurp:
