@@ -3,10 +3,10 @@
   hosts: localhost
   gather_facts: true
   vars:
-    cur_user: "{{ lookup('ansible.builtin.env', 'USER', default=undef()) }}" # Use lookup to get the current username
-    git_name: "{{ ansible_play_hosts[0] }}"
-    git_email: "{{ ansible_play_hosts[1] }}"
-    backup_repo: "{{ ansible_play_hosts[2] }}"
+    cur_user: "{{ ansible_play_hosts[0] }}"
+    git_name: "{{ ansible_play_hosts[1] }}"
+    git_email: "{{ ansible_play_hosts[2] }}"
+    backup_repo: "{{ ansible_play_hosts[3] }}"
     required_args:
       - git_name
       - git_email
@@ -25,7 +25,7 @@
 
     - name: Read GitHub Token from .github_token file
       slurp:
-        src: ~/.github_token
+        src: /home/{{ cur_user }}/.github_token
       register: github_token_file
 
     - name: Set GitHub Token
