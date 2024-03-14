@@ -169,8 +169,6 @@ install_ansible
 
 #repo_tmp="$HOME/tmp/$backup_repo"
 repo_tmp="$HOME/tmp/${backup_repo##*/}"
-bash
-Copy code
 # Check if the repository exists and is not empty
 if [ -d "$repo_tmp/.git" ] && [ "$(ls -A $repo_tmp)" ]; then
   # Navigate into the repository directory
