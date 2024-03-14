@@ -15,10 +15,13 @@
 
   tasks:
     - name: Check if required args are set
-      fail:
-        msg: "{{ item }} is not set. Please provide a value for {{ item }}"
-      when: "{{ item }} is not defined"
-      with_items: "{{ required_args }}"
+      assert:
+        that: item is defined
+      fail_msg: "{{ item }} is not set. Please provide a value for {{ item }}"
+      with_items:
+        - git_name
+        - git_email
+        - backup_repo
 
     - name: Debug HOME environment variable
       debug:
