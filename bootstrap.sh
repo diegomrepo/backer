@@ -185,7 +185,7 @@ if [ -d "$repo_tmp/.git" ] && [ "$(ls -A $repo_tmp)" ]; then
     else
       # If 'main' branch doesn't exist, do something else (e.g., create the branch)
       echo "Main branch doesn't exist, performing initialization"
-      if git checkout -b main && git push -u origin main; then
+      if git checkout -b main && git commit --allow-empty -m "Initial commit" && git push -u origin main; then
         echo "Main branch initialized and pushed successfully"
       else
         echo "Failed to initialize main branch and push"
