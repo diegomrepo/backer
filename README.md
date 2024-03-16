@@ -11,13 +11,13 @@ Have your GitHub repository email and commit name ready, as these will be used f
 Execute the following command in your terminal to kickstart the backup process:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/diegomrepo/backuper/main/bootstrap.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/diegomrepo/backer/main/bootstrap.sh)"
 ```
 ### Convenient Wrapper
-After the initial setup, you can effortlessly run the Ansible playbook anytime using the backuper wrapper. This utility is conveniently installed in ~/bin. Execute the following command to run the backup:
+After the initial setup, you can effortlessly run the Ansible playbook anytime using the backer wrapper. This utility is conveniently installed in ~/bin. Execute the following command to run the backup:
 
 ```bash
-~/bin/backuper
+~/bin/backer
 ```
 
 ### Repository Structure
