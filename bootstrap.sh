@@ -104,17 +104,17 @@ else
   backup_repo=$(prompt_user "Enter the backup repository (in the format 'username/repo')")
 fi
 
-# Set the backuper directory
+# Set the backer directory
 BINDIR="$HOME/bin"
 if mkdir -p "$BINDIR"; then
-  echo "Backuper directory created at $BINDIR"
+  echo " directory created at $BINDIR"
 else
-  echo "Failed to create backuper directory"
+  echo "Failed to create  directory"
   exit 1
 fi
 
-# Define the destination path for backuper executable
-backuper_exe="$BINDIR/backuper"
+# Define the destination path for  executable
+backer_exe="$BINDIR/backer"
 
 # Check if .github_token file exists
 token_file="$HOME/.github_token"
@@ -149,18 +149,18 @@ sleep 1
 
 
 
-# Set the XDG_DATA_HOME directory and create the backuper folder
+# Set the XDG_DATA_HOME directory and create the backer folder
 xdg_data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
-backuper_data_dir="$xdg_data_home/backuper"
-if mkdir -p "$backuper_data_dir"; then
-  echo "Backuper data directory created at $backuper_data_dir"
+backer_data_dir="$xdg_data_home/backer"
+if mkdir -p "$backer_data_dir"; then
+  echo "backer data directory created at $backer_data_dir"
 else
-  echo "Failed to create backuper data directory"
+  echo "Failed to create backer data directory"
   exit 1
 fi
 
 # Define the destination path for backup.yml
-playbookfile="$backuper_data_dir/backup.yml"
+playbookfile="$backer_data_dir/backup.yml"
 echo $playbookfile
 # Install Ansible based on the Linux distribution
 install_ansible
@@ -210,7 +210,7 @@ fi
 echo $playbookfile
 
 # Download backup.yml from the specified URL
-backup_url="https://raw.githubusercontent.com/diegomrepo/backuper/main/backup.yml"
+backup_url="https://raw.githubusercontent.com/diegomrepo/backer/main/backup.yml"
 if curl -v --connect-timeout 15 -fsSL -o "$playbookfile" "$backup_url"; then
   echo "backup.yml downloaded successfully to $playbookfile"
 else
@@ -228,13 +228,13 @@ else
   echo "Failed to execute Ansible playbook"
   exit 1
 fi
-# Create the backuper executable file in ~/bin
-echo "ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook ${playbookfile} --extra-vars 'cur_home=\"$HOME\" git_name=\"$git_name\" git_email=\"$git_email\" backup_repo=\"$backup_repo\"'" > "$backuper_exe"
-if chmod +x "$backuper_exe"; then
-  echo "Backuper executable created at $backuper_exe"
+# Create the backer executable file in ~/bin
+echo "ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook ${playbookfile} --extra-vars 'cur_home=\"$HOME\" git_name=\"$git_name\" git_email=\"$git_email\" backup_repo=\"$backup_repo\"'" > "$backer_exe"
+if chmod +x "$backer_exe"; then
+  echo "backer executable created at $backer_exe"
 else
-  echo "Failed to create backuper executable"
+  echo "Failed to create backer executable"
   exit 1
 fi
 
-echo Next time to backup, just execute ~/bin/backuper
+echo Next time to backup, just execute ~/bin/backer
