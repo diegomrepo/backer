@@ -173,7 +173,7 @@ repo_tmp="$HOME/tmp/${backup_repo##*/}"
 check_and_pull_main() {
   if git rev-parse --verify main >/dev/null 2>&1; then
     if git pull origin main; then
-      echo "GitHub repository pulled successfully"
+      echo "GitHub repository pulled successfully, main branch in-place"
     else
       echo "Failed to pull GitHub repository"
       exit 1
