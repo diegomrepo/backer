@@ -26,7 +26,7 @@ is_debian() {
 install_ansible() {
   if is_debian; then
     # Install Ansible using apt on Debian
-    if sudo apt install -y ansible; then
+    if sudo apt install -y ansible-core; then
       echo "Ansible installed successfully"
     else
       echo "Failed to install Ansible"
