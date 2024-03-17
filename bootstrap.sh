@@ -222,14 +222,16 @@ fi
 echo $playbookfile
 
 # Run the Ansible playbook to backup dot files and configs and upload them to GitHub
-if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile" --extra-vars "cur_home='$HOME' git_name='$git_name' git_email='$git_email' backup_repo='$backup_repo'"; then
+#if ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook "$playbookfile" --extra-vars "cur_home='$HOME' git_name='$git_name' git_email='$git_email' backup_repo='$backup_repo'"; then
+if ansible-playbook "$playbookfile" --extra-vars "cur_home='$HOME' git_name='$git_name' git_email='$git_email' backup_repo='$backup_repo'"; then
   echo "Ansible playbook executed successfully"
 else
   echo "Failed to execute Ansible playbook"
   exit 1
 fi
 # Create the backer executable file in ~/bin
-echo "ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook ${playbookfile} --extra-vars 'cur_home=\"$HOME\" git_name=\"$git_name\" git_email=\"$git_email\" backup_repo=\"$backup_repo\"'" > "$backer_exe"
+#echo "ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook ${playbookfile} --extra-vars 'cur_home=\"$HOME\" git_name=\"$git_name\" git_email=\"$git_email\" backup_repo=\"$backup_repo\"'" > "$backer_exe"
+echo "ansible-playbook ${playbookfile} --extra-vars 'cur_home=\"$HOME\" git_name=\"$git_name\" git_email=\"$git_email\" backup_repo=\"$backup_repo\"'" > "$backer_exe"
 if chmod +x "$backer_exe"; then
   echo "backer executable created at $backer_exe"
 else
