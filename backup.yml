@@ -73,8 +73,17 @@
         dest: /tmp/backups/{{ item.path | basename }}
       with_items: "{{ backup_files.files }}"
 
+    - name: Check if .backer_add file exists
+      stat:
+        path: "{{ cur_home}}/.backer_add"
+      register: backer_add_file
+
+    - name: Set .backer_add variable
+      set_fact:
+        backer_add: "{{ '--files-from=' + cur_home + '/.backer_add' if backer_add_file.stat.exists else '' }}"
+
     - name: Sync dot files and configs
-      command: rsync -av --delete --exclude=.git/ --existing --include='.*' --include='*.conf' --include='*.cfg' --include='*.ini' --exclude='*' "{{ ansible_env.HOME }}/" /tmp/backups/
+      command: rsync -av --delete --copy-links --exclude=.git/ {{ backer_add }} --include='.*' --include='*.conf' --include='*.cfg' --include='*.ini' "{{ ansible_env.HOME }}/" /tmp/backups/
 
     - name: Check for changes
       command: git status --porcelain
