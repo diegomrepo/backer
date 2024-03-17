@@ -1,24 +1,20 @@
-## Configuration Backup Utility
-Welcome to the Configuration Backup Utility repository. This collection includes meticulously crafted Bash scripts and an Ansible playbook designed for seamlessly backing up your essential dot files and configurations. The backup process is directed towards a private GitHub repository of your choice, ensuring a secure and organized storage solution.
+## Configuration Backup Utility:
+It provides Bash scripts and an Ansible playbook for backing up dot files and configurations to a private GitHub repository.
 
-### Getting Started
-To initiate the configuration backup, follow the straightforward steps below:
+### Getting Started:
+Users need to create a GitHub repository and have their GitHub credentials ready to initiate the backup process.
 
-Ensure you have a GitHub repository created in advance to serve as your dedicated backup space.
-Have your GitHub repository email and commit name ready, as these will be used for committing the backup in your name.
+### Requirements:
+The utility is designed for Debian-based systems. For users operating within constrained versions or environments, the presence of both `sudo` and `curl` is required.
 
-### Requirements
-This utility is all about Debian-based systems. If you're using a contrained version or env, make sure you've got `sudo` and `curl` installed. 
-
-### One-Step Setup
-Execute the following command in your terminal to kickstart the backup process:
-
+### One-Step Setup:
+Users can initiate the backup process with a single command provided in the section.
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/diegomrepo/backer/main/bootstrap.sh)"
 ```
-### Convenient Wrapper
-After the initial setup, you can effortlessly run the Ansible playbook anytime using the backer wrapper. This utility is conveniently installed in ~/bin. Execute the following command to run the backup:
 
+### Convenient Wrapper:
+After setup, users can use the backer wrapper installed in ~/bin to run the backup process easily.
 ```bash
 ~/bin/backer
 ```
