@@ -25,9 +25,7 @@
 
     - name: Debug HOME environment variable
       debug:
-        var:
-          - cur_home
-          - test
+        var: cur_home
 
     - name: Read GitHub Token from ~/.github_token file
       slurp:
@@ -43,8 +41,14 @@
         path: /tmp/backups
         state: directory
 
-    - name: Add exception for /tmp/backups directory in Git config
+    - name: Check if /tmp/backups directory is already added to Git config
+      shell: git config --get-all safe.directory | grep -q '/tmp/backups'
+      register: safe_directory_exists
+      ignore_errors: yes
+    
+    - name: Add exception for /tmp/backups directory in Git config if not already added
       command: git config --global --add safe.directory /tmp/backups
+      when: not safe_directory_exists.rc == 0
 
     - name: Clone the GitHub repository
       git:
