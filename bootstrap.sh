@@ -1,6 +1,6 @@
 #!/bin/bash
-set -e #set -o errexit
-#set -x #show each command for debugging
+set -e    # exit on error of any command error
+#set -x   # uncommend when debugging
 
 # Function to open a URL in the default web browser
 open_url() {
@@ -160,7 +160,6 @@ playbookfile="$backer_data_dir/backup.yml"
 
 # Install Ansible based on the Linux distribution
 install_ansible
-echo $playbookfile
 
 repo_tmp="$HOME/tmp/${backup_repo##*/}"
 
@@ -222,8 +221,6 @@ else
   exit 1
 fi
 
-echo $playbookfile
-
 # Run the Ansible playbook to backup dot files and configs and upload them to GitHub
 if ansible-playbook "$playbookfile" --extra-vars "cur_home='$HOME' git_name='$git_name' git_email='$git_email' backup_repo='$backup_repo'"; then
   echo "Ansible playbook executed successfully"
@@ -231,6 +228,7 @@ else
   echo "Failed to execute Ansible playbook"
   exit 1
 fi
+
 # Create the backer executable file in ~/bin
 echo "ansible-playbook ${playbookfile} --extra-vars 'cur_home=\"$HOME\" git_name=\"$git_name\" git_email=\"$git_email\" backup_repo=\"$backup_repo\"'" > "$backer_exe"
 if chmod +x "$backer_exe"; then
