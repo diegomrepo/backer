@@ -5,16 +5,16 @@ It provides Bash scripts and an Ansible playbook for backing up dot files and co
 Before executing the script, make sure you have created a GitHub repository (recommended to set up as private). During execution, you will be prompted to provide the committer's email and name.
 
 ### Requirements:
-The utility is designed for Debian-based systems. For users operating within constrained versions or environments, the presence of both `sudo` and `curl` is required.
+The utility is designed for Debian-based systems. If you're operating within constrained version or environment, the presence of both `sudo` and `curl` is required.
 
 ### One-Step Setup:
-Users can initiate the backup process with a single command provided in the section.
+You can initiate the backup process with this single command:
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/diegomrepo/backer/main/bootstrap.sh)"
 ```
 
 ### Convenient Wrapper:
-After setup, users can use the backer wrapper installed in ~/bin to run the backup process easily.
+After setup, you can use the backer wrapper installed in ~/bin to run the backup process easily.
 ```bash
 ~/bin/backer
 ```
