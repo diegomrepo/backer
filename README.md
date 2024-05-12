@@ -1,4 +1,4 @@
-## Configuration Backup Utility:
+## Configuration Backup Utility
 It provides Bash scripts and an Ansible playbook for backing up dot files and configurations to a private GitHub repository.
 
 ### Getting Started:
@@ -19,6 +19,6 @@ After setup, you can use the backer wrapper installed in ~/bin to run the backup
 ~/bin/backer
 ```
 
-### Repository Structure
+### Directory Contents:
 - `bootstrap.sh` Script for setting up essential tools.
 - `backup.yml` Ansible playbook automating the backup process for dot files and configurations.
